@@ -14,9 +14,14 @@ var connection = mysql.createConnection({
 });
 
 
+
 connection.connect(function (err) {
     if (err) throw err;
-    start();
+    connection.query("SELECT * FROM products", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        start();
+    });
 });
 // var list = function (list) {
 //     var query = connection.query(
@@ -57,9 +62,8 @@ function start() {
             }
         ])
         .then(function (answer) {
-            var query = "UPDATE products SET products.stock_quantity=? WHERE products.item_id=?" + 
-            "SELECT LAST_INSERTED_ID();";
-            connection.query(query, [answer.stock_quantity, answer.item_id, answer.item_id], function (err, res) {
+            var query = "UPDATE products SET products.stock_quantity=? WHERE products.item_id=?";
+            connection.query(query, [answer.stock_quantity, answer.item_id], function (err, res) {
                 console.log(err);
                 console.log(
                     "ID: " +
